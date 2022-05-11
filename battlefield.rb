@@ -21,7 +21,7 @@ class Battlefield
     end
   end
 
-  def show
+  def full_show
     print "  "
     1.upto(10) do |x|
       print " #{(x + 64).chr} "
@@ -35,6 +35,25 @@ class Battlefield
       end
       1.upto(10) do |x|
         print " #{map[y][x]} "
+      end
+      print "\n"
+    end
+  end
+
+  def show
+    print "  "
+    1.upto(10) do |x|
+      print " #{(x + 64).chr} "
+    end
+    print "\n"
+    1.upto(10) do |y|
+      if y != 10
+        print "#{y} "
+      else
+        print "#{y}"
+      end
+      1.upto(10) do |x|
+        print " #{map[y][x] === "S" ? "." : map[y][x]} "
       end
       print "\n"
     end

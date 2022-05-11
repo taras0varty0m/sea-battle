@@ -11,9 +11,12 @@ battlefield.place_ships # insert ships into the map
 puts "Game started!"
 
 coordinates = ""
-while coordinates != "surrender" && health_points != 0
+while health_points != 0
   print "Enter the coordinates of the ship: "
   coordinates = gets.chomp
+  if coordinates === "surrender"
+    break
+  end
   if /^([a-j][1-9]|[a-j]10)$/s.match(coordinates)
     splitted = coordinates.upcase.chars
 

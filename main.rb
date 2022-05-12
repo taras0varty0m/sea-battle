@@ -1,43 +1,64 @@
-require "./general_methods"
-require "./battlefield"
+# frozen_string_literal: true
 
-arr_ships = create_ships # create an array, filled with ships
-arr_map = create_map # create an empty array with dots
-battlefield = Battlefield.new(arr_ships, arr_map) # create a new battlefield
+require './general_methods'
+require './battlefield'
+
+# create an array, filled with ships
+ships = create_ships
+# create an empty array with dots
+map = create_map
+# create a new battlefield
+battlefield = Battlefield.new(ships, map)
 health_points = 20
 
-battlefield.full_show # output empty battlefield
-battlefield.place_ships # insert ships into the map
-puts "Game started!"
+# output empty battlefield
+battlefield.full_show
+# insert ships into the map
+battlefield.place_ships
 
-coordinates = ""
-while health_points != 0
-  print "Enter the coordinates of the ship: "
-  coordinates = gets.chomp
-  if coordinates === "surrender"
-    break
-  end
-  if /^([a-j][1-9]|[a-j]10)$/s.match(coordinates)
-    splitted = coordinates.upcase.chars
+puts 'Game started!'
 
-    coordinate = arr_map[splitted.length === 3 ? 10 : splitted[1].to_i][(splitted[0].ord - 64).to_i]
-    if coordinate === "S" || coordinate === "X"
+def win
+  puts 'You win!'
+end
+
+def surrender
+  puts 'What a shame…'
+end
+
+loop do
+  print 'Enter the coordinates of the ship: '
+
+  coordinates = gets.chomp.upcase
+
+  break surrender if coordinates == 'SURRENDER'
+
+  if /^([A-J][1-9]|[A-J]10)$/s.match(coordinates)
+    command = coordinates.chars
+
+    position_x = command.length == 3 ? 10 : command[1].to_i
+    position_y = (command[0].ord - 64).to_i
+
+    coordinate = map[position_x][position_y]
+
+    case coordinate
+    when 'S'
       health_points -= 1
-      coordinate = "X"
+      coordinate = 'X'
+    when 'X'
+      next
     else
-      coordinate = "O"
+      coordinate = 'O'
     end
-    arr_map[splitted.length === 3 ? 10 : splitted[1].to_i][(splitted[0].ord - 64).to_i] = coordinate
+
+    map[position_x][position_y] = coordinate
+
     battlefield.show
   else
-    puts "Incorect coordinates"
+    puts 'Incorrect coordinates.'
   end
+
+  break win if health_points.zero?
 end
 
-if coordinates === "surrender"
-  puts "What a shame…"
-  battlefield.full_show
-else
-  puts "You win!"
-  battlefield.full_show
-end
+battlefield.full_show

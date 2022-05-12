@@ -1,23 +1,26 @@
-require "./ship.rb"
+# frozen_string_literal: true
+
+require './ship'
 
 def create_ships
-  armada = ["Battleship", "Corvette", "Corvette", "Brig", "Brig", "Brig", "Frigate",
-            "Frigate", "Frigate", "Frigate"]
+  ships = %w[Battleship Corvette Corvette Brig Brig Brig Frigate Frigate Frigate Frigate]
   arr_ships = []
 
-  armada.each_with_index do |var, index|
-    case var
-    when "Battleship"
-      life = 4
-    when "Corvette"
-      life = 3
-    when "Brig"
-      life = 2
-    when "Frigate"
-      life = 1
-    end
-    arr_ships.push(Ship.new(var, life))
+  ships.each do |var|
+    life = case var
+           when 'Battleship'
+             4
+           when 'Corvette'
+             3
+           when 'Brig'
+             2
+           else 'Frigate'
+                1
+           end
+
+    arr_ships << (Ship.new(var, life))
   end
+
   arr_ships
 end
 
@@ -26,8 +29,9 @@ def create_map
 
   12.times do |y|
     12.times do |x|
-      arr_map[y][x] = "."
+      arr_map[y][x] = '.'
     end
   end
+
   arr_map
 end

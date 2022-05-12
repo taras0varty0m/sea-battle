@@ -1,8 +1,16 @@
+# frozen_string_literal: true
+
+# TODO
+#   use attr_reader to access instance variables instead of getters
+#   rename position to direction
+#   move positions to a constant
+
 class Ship
   def initialize(name, life)
     @name = name
     @life = life
-    @position = set_position
+
+    @position = initialize_position
   end
 
   def name
@@ -19,7 +27,7 @@ class Ship
 
   private
 
-  def set_position
+  def initialize_position
     position = %w[across along]
     position[Random.rand(2)]
   end

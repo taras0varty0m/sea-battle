@@ -1,34 +1,21 @@
 # frozen_string_literal: true
 
-# TODO
-#   use attr_reader to access instance variables instead of getters
-#   rename position to direction
-#   move positions to a constant
-
 class Ship
+  DIRECTIONS = %w[across along].freeze
+
   def initialize(name, life)
     @name = name
     @life = life
 
-    @position = initialize_position
+    initialize_direction
   end
 
-  def name
-    @name
-  end
-
-  def life
-    @life
-  end
-
-  def position
-    @position
-  end
+  attr_reader :name, :life, :direction
 
   private
 
-  def initialize_position
-    position = %w[across along]
-    position[Random.rand(2)]
+  def initialize_direction
+    @direction = DIRECTIONS.sample
+
   end
 end

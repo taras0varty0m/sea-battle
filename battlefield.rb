@@ -9,34 +9,28 @@ class Battlefield
   end
 
   def place_ships
-    # TODO: if you are going through ships, then each item should be named accordingly
     ships.each do |ship|
-      loop do # While optimal random x & y coordinates are not found - loop
+      # While optimal random x & y coordinates are not found - loop
+      loop do
 
-        # TODO: can be simplified by rand(1..10)
         x_pos = rand(1..10)
-        y_pos = (1 + Random.rand(10))
+        y_pos = rand(1..10)
 
-        # TODO: parentheses in expressions are unnecessary
-        #
-        # If horizontal positioned ship does not overflow the map
-        # and it's position doesn't cross the rules - break loop
-        break if ship.position == "along" && x_pos + ship.life <= 11 && check(x_pos, y_pos, ship)
+        # If horizontal direction ship does not overflow the map
+        # and it's direction doesn't cross the rules - break loop
+        break if ship.direction == 'along' && x_pos + ship.life <= 11 && check(x_pos, y_pos, ship)
 
-        # TODO: the same as above
-        if (ship.position == "across" && (y_pos + ship.life) <= 11) # If vertical positioned ship does not overflow the map
-          break if check(x_pos, y_pos, ship) # And it's position doesn't cross the rules - break loop
-        end
+        # If vertical direction ship does not overflow the map
+        break if ship.direction == 'across' && (y_pos + ship.life) <= 11 && check(x_pos, y_pos, ship)
       end
     end
   end
 
   def full_show
-    print "  "
+    print '  '
 
-    # TODO: can be simplified by ('A'..'J').to_a.each
-    1.upto(10) do |x|
-      print " #{(x + 64).chr} "
+    ('A'..'J').to_a.each do |x|
+      print " #{x} "
     end
 
     print "\n"
@@ -45,8 +39,7 @@ class Battlefield
       if y != 10
         print "#{y} "
       else
-        # TODO: can be simplified by print y.to_s
-        print "#{y}"
+        print y.to_s
       end
 
       1.upto(10) do |x|
@@ -58,11 +51,10 @@ class Battlefield
   end
 
   def show
-    print "  "
+    print '  '
 
-    # TODO: the same as above
-    1.upto(10) do |x|
-      print " #{(x + 64).chr} "
+    ('A'..'J').to_a.each do |x|
+      print " #{x} "
     end
 
     print "\n"
@@ -71,13 +63,11 @@ class Battlefield
       if y != 10
         print "#{y} "
       else
-        # TODO: the same as above
-        print "#{y}"
+        print y.to_s
       end
 
-      # TODO: avoid to use of the case equality operator ===
       1.upto(10) do |x|
-        print " #{map[y][x] == "S" ? "." : map[y][x]} "
+        print " #{map[y][x] == 'S' ? '.' : map[y][x]} "
       end
 
       print "\n"
@@ -86,54 +76,44 @@ class Battlefield
 
   private
 
-  # TODO: variables must be named by their meaning and without abbreviations
-  def check(x_p, y_p, obj)
+  def check(x_position, y_position, ship)
     flag = true
 
-    # TODO: parentheses in expressions are unnecessary
-    if (obj.position == "along") # Check rules for horizontal positioned ships
-      # TODO: count variable is unnecessary
-      count = x = x_p - 1
-      while x < (x_p + obj.life + 1)
-        if (map[y_p][x] != "." || map[y_p + 1][x] != "." || map[y_p - 1][x] != ".")
+    # Check rules for horizontal direction ships
+    if ship.direction == 'along'
+      x = x_position - 1
+      while x < (x_position + ship.life + 1)
+        return false if map[y_position][x] != '.' || map[y_position + 1][x] != '.' || map[y_position - 1][x] != '.'
 
-          # TODO: you can just return false in this case
-          flag = false
-          break
-        end
         x += 1
       end
     end
 
-    # TODO: the same as above
-    if (obj.position == "across") # Check rules for vertical positioned ships
-      # TODO: the same as above
-      count = y = y_p - 1
-      while y < (y_p + obj.life + 1)
-        if (map[y][x_p] != "." || map[y][x_p + 1] != "." || map[y][x_p - 1] != ".")
+    # Check rules for vertical direction ships
+    if ship.direction == 'across'
+      y = y_position - 1
+      while y < (y_position + ship.life + 1)
+        return false if map[y][x_position] != '.' || map[y][x_position + 1] != '.' || map[y][x_position - 1] != '.'
 
-          # TODO: the same as above
-          flag = false
-          break
-        end
         y += 1
       end
     end
 
-    set_ship(x_p, y_p, obj) if flag  # If everything is fine - set ship
+    # If everything is fine - set ship
+    set_ship(x_position, y_position, ship) if flag
 
     flag
   end
 
   def set_ship(x_pos, y_pos, ship)
-    case ship.position
-    when "along"
+    case ship.direction
+    when 'along'
       ship.life.times do |x|
-        map[y_pos][x_pos + x] = "S"
+        map[y_pos][x_pos + x] = 'S'
       end
-    when "across"
+    when 'across'
       ship.life.times do |y|
-        map[y_pos + y][x_pos] = "S"
+        map[y_pos + y][x_pos] = 'S'
       end
     end
   end

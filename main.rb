@@ -3,18 +3,18 @@
 require './general_methods'
 require './battlefield'
 
-# TODO
-#   1. replace all === operators to ==
-#   2. comments should be above the line commented on
-#   3. rename all variables so that there is no abbreviation and it is immediately clear what is stored in it
-
-arr_ships = create_ships # create an array, filled with ships
-arr_map = create_map # create an empty array with dots
-battlefield = Battlefield.new(arr_ships, arr_map) # create a new battlefield
+# create an array, filled with ships
+ships = create_ships
+# create an empty array with dots
+map = create_map
+# create a new battlefield
+battlefield = Battlefield.new(ships, map)
 health_points = 20
 
-battlefield.full_show # output empty battlefield
-battlefield.place_ships # insert ships into the map
+# output empty battlefield
+battlefield.full_show
+# insert ships into the map
+battlefield.place_ships
 
 puts 'Game started!'
 
@@ -29,28 +29,29 @@ end
 loop do
   print 'Enter the coordinates of the ship: '
 
-  # TODO: fix incorrect coordinates error on SuRReNdEr, A1
-  coordinates = gets.chomp
+  coordinates = gets.chomp.upcase
 
-  break surrender if coordinates === 'surrender'
+  break surrender if coordinates == 'SURRENDER'
 
-  if /^([a-j][1-9]|[a-j]10)$/s.match(coordinates)
-    command = coordinates.upcase.chars
+  if /^([A-J][1-9]|[A-J]10)$/s.match(coordinates)
+    command = coordinates.chars
 
-    coordinate = arr_map[command.length === 3 ? 10 : command[1].to_i][(command[0].ord - 64).to_i]
+    position_x = command.length == 3 ? 10 : command[1].to_i
+    position_y = (command[0].ord - 64).to_i
 
-    # TODO: fix the bug if you shoot at an already damaged ship 20 times
-    if coordinate === 'S' || coordinate === 'X'
+    coordinate = map[position_x][position_y]
+
+    case coordinate
+    when 'S'
       health_points -= 1
       coordinate = 'X'
+    when 'X'
+      next
     else
       coordinate = 'O'
     end
 
-    # TODO: duplicate fragments
-    #   command.length === 3 ? 10 : command[1].to_i
-    #   (command[0].ord - 64).to_i
-    arr_map[command.length === 3 ? 10 : command[1].to_i][(command[0].ord - 64).to_i] = coordinate
+    map[position_x][position_y] = coordinate
 
     battlefield.show
   else
